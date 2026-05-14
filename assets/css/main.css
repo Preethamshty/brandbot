@@ -15180,22 +15180,9 @@ body.tw-magic-cursor #magic-cursor {
 }
 
 /* Team page image alignment fix */
-.team-five-thumb {
-    width: 100%;
-    height: 420px;
-    overflow: hidden;
-    border-radius: 20px;
-    background: #111;
-}
 
-.team-five-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-    display: block;
-    border-radius: 20px;
-}
+
+
 
 /* Keep spacing and text alignment clean */
 .team-five-wrapper {
@@ -16843,26 +16830,22 @@ li.menu-item-has-children a[href*="blog"] {
 
 /* Default card styling */
 .team-five-thumb {
+    height: 340px;
     border-radius: 20px;
     overflow: hidden;
     padding: 10px;
 }
 
 /* Team images */
-.team-five-thumb img {
-    width: 100%;
-    display: block;
-    border-radius: 14px;
-}
 
-/* ODD cards = BLUE */
+/* ODD cards = WHITE */
 .col-xl-4:nth-child(odd) .team-five-thumb {
-    background: #2F6FA5;
+    background: #f3f4f6;
 }
 
-/* EVEN cards = WHITE */
+/* EVEN cards = BLUE */
 .col-xl-4:nth-child(even) .team-five-thumb {
-    background: #f3f4f6;
+    background: #2F6FA5;
 }
 
 /* Fix spacing below image */
@@ -16886,3 +16869,52 @@ li.menu-item-has-children a[href*="blog"] {
 
 
 
+
+
+
+
+/* =====================================
+   FINAL TEAM IMAGE ALIGNMENT FIX
+===================================== */
+
+.team-five-wrapper .team-five-thumb {
+    height: 340px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border-radius: 20px !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+}
+
+/* Images */
+.team-five-wrapper .team-five-thumb img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: top center !important;
+    display: block !important;
+    border-radius: 20px !important;
+}
+
+/* Alternating backgrounds */
+
+/* ODD cards = WHITE */
+.col-xl-4:nth-child(odd) .team-five-thumb {
+    background: #f3f4f6;
+}
+
+/* EVEN cards = BLUE */
+.col-xl-4:nth-child(even) .team-five-thumb {
+    background: #2F6FA5;
+}
+
+/* Text spacing */
+.team-five-wrapper .tw-mt-8 {
+    margin-top: 14px !important;
+    min-height: auto !important;
+}
+
+.team-five-wrapper h4 {
+    margin-bottom: 4px !important;
+}
