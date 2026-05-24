@@ -317,18 +317,17 @@ gsap.utils.toArray('.maquee-bg').forEach(container => {
 // 07. cta animation Js
 if ($('.cta-area').length > 0) {
     if (window.innerWidth <= 991) {
-        // Mobile/tablet: fade-up on scroll (x-shift clips right-aligned text)
-        gsap.from(['.tw-cta-title-1', '.tw-cta-title-2'], {
-            opacity: 0,
-            y: 30,
-            stagger: 0.18,
-            duration: 0.9,
-            ease: 'power2.out',
-            scrollTrigger: {
-                trigger: '.cta-area',
-                start: 'top 80%',
-            }
-        });
+        // Mobile/tablet: fade-up on scroll
+        gsap.fromTo('.tw-cta-title-1',
+            { opacity: 0, y: 24 },
+            { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
+              scrollTrigger: { trigger: '.cta-area', start: 'top 85%', once: true } }
+        );
+        gsap.fromTo('.tw-cta-title-2',
+            { opacity: 0, y: 24 },
+            { opacity: 1, y: 0, duration: 0.8, delay: 0.15, ease: 'power2.out',
+              scrollTrigger: { trigger: '.cta-area', start: 'top 85%', once: true } }
+        );
     } else {
         // Desktop: original parallax x-shift
         gsap.set('.tw-cta-title-1', { x: '10%' });
