@@ -315,7 +315,7 @@ gsap.utils.toArray('.maquee-bg').forEach(container => {
 
 ////////////////////////////////////////////////////
 // 07. cta animation Js
-if ($('.cta-area').length > 0) {
+if ($('.cta-area').length > 0 && window.innerWidth > 991) {
     gsap.timeline({
             scrollTrigger: {
                 trigger: '.cta-area',
@@ -331,9 +331,8 @@ if ($('.cta-area').length > 0) {
     gsap.set('.tw-cta-title-1', {
         x: '10%'
     });
-
 }
-if ($('.cta-area').length > 0) {
+if ($('.cta-area').length > 0 && window.innerWidth > 991) {
     gsap.timeline({
             scrollTrigger: {
                 trigger: '.cta-area',

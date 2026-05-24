@@ -1,3 +1,161 @@
+/* ============================================================
+   Brand Logo Infinite Slider — two rows, opposite directions
+   ============================================================ */
+
+@keyframes bb-scroll-left {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+@keyframes bb-scroll-right {
+    0%   { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+}
+
+.bb-brand-slider-section {
+    width: 100%;
+    overflow: hidden;
+}
+
+/* fade edges */
+.bb-brand-row-wrap {
+    overflow: hidden;
+    margin-bottom: 20px;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, #000 10%, #000 90%, transparent 100%);
+}
+
+.bb-brand-row {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    gap: 18px;
+}
+
+.bb-row-left {
+    animation: bb-scroll-left 30s linear infinite;
+}
+
+.bb-row-right {
+    animation: bb-scroll-right 28s linear infinite;
+}
+
+/* pause on hover */
+.bb-brand-row-wrap:hover .bb-brand-row {
+    animation-play-state: paused;
+}
+
+/* logo card base */
+.bb-brand-item {
+    flex: 0 0 auto;
+    width: 210px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1c1c1c;
+    padding: 18px 24px;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.bb-brand-item:hover {
+    background: #2a2a2a;
+    transform: translateY(-3px);
+}
+
+/* shapes */
+.bb-rect { border-radius: 14px; }
+.bb-pill  { border-radius: 100px; }
+
+/* logo image */
+.bb-brand-item img {
+    max-width: 100%;
+    max-height: 72px;
+    width: auto;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+}
+
+.bb-brand-item:hover img {
+    opacity: 1;
+}
+
+/* mobile */
+@media (max-width: 575px) {
+    .bb-brand-item {
+        width: 150px;
+        height: 90px;
+        padding: 14px 18px;
+    }
+    .bb-brand-item img {
+        max-height: 54px;
+    }
+    .bb-brand-row { gap: 12px; }
+    .bb-row-left  { animation-duration: 22s; }
+    .bb-row-right { animation-duration: 20s; }
+}
+
+/* ============================================================
+   CTA "Let's Work Together" — mobile fix
+   ============================================================ */
+
+/* Prevent overflow caused by large font + GSAP x-shift */
+.cta-area {
+    overflow: hidden;
+}
+
+/* Tablet */
+@media (max-width: 991px) {
+    /* GSAP is disabled below 992px — reset any leftover inline transform */
+    .tw-cta-title-1,
+    .tw-cta-title-2 {
+        transform: none !important;
+    }
+
+    .cta-area .portfolio-top-subtitle {
+        font-size: 5rem !important;
+        margin-inline-start: 0 !important;
+        text-align: center;
+    }
+
+    .cta-area .portfolio-top-title {
+        font-size: 5rem !important;
+        margin-block-start: -20px !important;
+        text-align: center;
+    }
+
+    .cta-area .portfolio-shape {
+        display: none;
+    }
+}
+
+/* Mobile */
+@media (max-width: 575px) {
+    .cta-area .portfolio-top-subtitle {
+        font-size: 3rem !important;
+    }
+
+    .cta-area .portfolio-top-title {
+        font-size: 3rem !important;
+        margin-block-start: -10px !important;
+    }
+}
+
+/* Hide custom cursors on touch/mobile devices */
+@media (hover: none), (pointer: coarse) {
+    .cursor,
+    .dot,
+    #magic-cursor,
+    #ball {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
+}
+
 /* FORCE ALL TEXT WHITE INSIDE SERVICE CARD ON HOVER */
 
 .service-wrapper:hover * {
@@ -176,6 +334,13 @@
     }
 }
 
+/* Hide WhatsApp button during preloader */
+.preloader-active .bb-float-whatsapp {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
 /* Floating WhatsApp button (bottom-left) */
 .bb-float-whatsapp {
     position: fixed;
@@ -218,3 +383,4 @@
         height: 22px;
     }
 }
+
