@@ -98,22 +98,16 @@
 }
 
 /* ============================================================
-   CTA "Let's Work Together" — mobile fix
+   CTA "Let's Work Together" — responsive fix
    ============================================================ */
 
-/* Prevent overflow caused by large font + GSAP x-shift */
+/* Clip any edge overshoot from the small GSAP x-shift on mobile */
 .cta-area {
     overflow: hidden;
 }
 
 /* Tablet */
 @media (max-width: 991px) {
-    /* GSAP is disabled below 992px — reset any leftover inline transform */
-    .tw-cta-title-1,
-    .tw-cta-title-2 {
-        transform: none !important;
-    }
-
     .cta-area .portfolio-top-subtitle {
         font-size: 5rem !important;
         margin-inline-start: 0 !important;

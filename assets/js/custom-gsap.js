@@ -315,39 +315,27 @@ gsap.utils.toArray('.maquee-bg').forEach(container => {
 
 ////////////////////////////////////////////////////
 // 07. cta animation Js
-if ($('.cta-area').length > 0 && window.innerWidth > 991) {
+if ($('.cta-area').length > 0) {
+    var ctaMobile = window.innerWidth <= 991;
+    var x1Start = ctaMobile ? '3%'  : '10%';
+    var x1End   = ctaMobile ? '-3%' : '-15%';
+    var x2Start = ctaMobile ? '-3%' : '-10%';
+    var x2End   = ctaMobile ? '3%'  : '10%';
+
+    gsap.set('.tw-cta-title-1', { x: x1Start });
+    gsap.set('.tw-cta-title-2', { x: x2Start });
+
     gsap.timeline({
-            scrollTrigger: {
-                trigger: '.cta-area',
-                start: 'top 100%',
-                end: 'bottom 20%',
-                scrub: true,
-                invalidateOnRefresh: true
-            }
-        })
-        .to('.tw-cta-title-1', {
-            x: '-15%'
-        });
-    gsap.set('.tw-cta-title-1', {
-        x: '10%'
-    });
-}
-if ($('.cta-area').length > 0 && window.innerWidth > 991) {
-    gsap.timeline({
-            scrollTrigger: {
-                trigger: '.cta-area',
-                start: 'top 100%',
-                end: 'bottom 20%',
-                scrub: true,
-                invalidateOnRefresh: true
-            }
-        })
-        .to('.tw-cta-title-2', {
-            x: '10%'
-        });
-    gsap.set('.tw-cta-title-2', {
-        x: '-10%'
-    });
+        scrollTrigger: {
+            trigger: '.cta-area',
+            start: 'top 100%',
+            end: 'bottom 20%',
+            scrub: true,
+            invalidateOnRefresh: true
+        }
+    })
+    .to('.tw-cta-title-1', { x: x1End }, 0)
+    .to('.tw-cta-title-2', { x: x2End }, 0);
 }
 
 
