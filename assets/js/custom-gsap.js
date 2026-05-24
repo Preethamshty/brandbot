@@ -316,24 +316,7 @@ gsap.utils.toArray('.maquee-bg').forEach(container => {
 ////////////////////////////////////////////////////
 // 07. cta animation Js
 if ($('.cta-area').length > 0) {
-    if (window.innerWidth <= 991) {
-        // Mobile/tablet: fade-up on scroll
-        gsap.fromTo('.tw-cta-title-1',
-            { opacity: 0, y: 24 },
-            { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
-              scrollTrigger: { trigger: '.cta-area', start: 'top 85%', once: true } }
-        );
-        gsap.fromTo('.tw-cta-title-2',
-            { opacity: 0, y: 24 },
-            { opacity: 1, y: 0, duration: 0.8, delay: 0.15, ease: 'power2.out',
-              scrollTrigger: { trigger: '.cta-area', start: 'top 85%', once: true } }
-        );
-    } else {
-        // Desktop: original parallax x-shift
-        gsap.set('.tw-cta-title-1', { x: '10%' });
-        gsap.set('.tw-cta-title-2', { x: '-10%' });
-
-        gsap.timeline({
+    gsap.timeline({
             scrollTrigger: {
                 trigger: '.cta-area',
                 start: 'top 100%',
@@ -342,9 +325,29 @@ if ($('.cta-area').length > 0) {
                 invalidateOnRefresh: true
             }
         })
-        .to('.tw-cta-title-1', { x: '-15%' }, 0)
-        .to('.tw-cta-title-2', { x: '10%' }, 0);
-    }
+        .to('.tw-cta-title-1', {
+            x: '-15%'
+        });
+    gsap.set('.tw-cta-title-1', {
+        x: '10%'
+    });
+}
+if ($('.cta-area').length > 0) {
+    gsap.timeline({
+            scrollTrigger: {
+                trigger: '.cta-area',
+                start: 'top 100%',
+                end: 'bottom 20%',
+                scrub: true,
+                invalidateOnRefresh: true
+            }
+        })
+        .to('.tw-cta-title-2', {
+            x: '10%'
+        });
+    gsap.set('.tw-cta-title-2', {
+        x: '-10%'
+    });
 }
 
 
