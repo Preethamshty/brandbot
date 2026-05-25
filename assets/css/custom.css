@@ -178,15 +178,13 @@
     display: block;
 }
 
-/* About section — hide image on mobile, show text only */
+/* About section — mobile: hide image, arrow, tagline text and ball */
 @media (max-width: 767px) {
-    .about-area .about-bg {
+    .about-area .about-bg,
+    .about-content .tw-mb-10,
+    .about-paragraph,
+    .about-ball {
         display: none !important;
-    }
-
-    .about-paragraph {
-        font-size: 1.5rem !important;
-        line-height: 1.5 !important;
     }
 }
 
