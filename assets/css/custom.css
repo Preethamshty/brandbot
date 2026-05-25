@@ -178,8 +178,12 @@
     display: block;
 }
 
-/* About section tagline — reduce on mobile */
+/* About section — hide image on mobile, show text only */
 @media (max-width: 767px) {
+    .about-area .about-bg {
+        display: none !important;
+    }
+
     .about-paragraph {
         font-size: 1.5rem !important;
         line-height: 1.5 !important;
