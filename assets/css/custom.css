@@ -1,4 +1,61 @@
 /* ============================================================
+   Helvetica Font — @font-face declarations
+   ============================================================ */
+
+@font-face {
+    font-family: "Helvetica";
+    src: url("../fonts/Helvetica.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Helvetica";
+    src: url("../fonts/Helvetica-Oblique.ttf") format("truetype");
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Helvetica";
+    src: url("../fonts/Helvetica-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Helvetica";
+    src: url("../fonts/Helvetica-BoldOblique.ttf") format("truetype");
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Helvetica";
+    src: url("../fonts/helvetica-light-587ebe5a59211.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Apply Helvetica to all headings globally */
+:root {
+    --heading-font: "Helvetica", "Arial", sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6,
+.font-heading,
+[class*="section-title"],
+[class*="banner-title"],
+[class*="tw-char-animation"] {
+    font-family: "Helvetica", "Arial", sans-serif !important;
+}
+
+/* ============================================================
    Brand Logo Infinite Slider — two rows, opposite directions
    ============================================================ */
 
@@ -379,5 +436,56 @@
         width: 22px;
         height: 22px;
     }
+}
+
+/* ============================================================
+   Helvetica font-size recalibration
+   Mango Grotesque was an ultra-wide display face — Helvetica is
+   standard-proportion so sizes need to come down for a clean look
+   ============================================================ */
+
+/* 1. Hero banner: CREATIVE + AGENCY */
+@media (min-width: 768px) {
+    .banner-title {
+        font-size: 110px !important;
+    }
+    .banner-title span {
+        font-size: 195px !important;
+    }
+}
+
+/* 2. Portfolio section + CTA "LET'S WORK / TOGETHER" — desktop */
+@media (min-width: 992px) {
+    .portfolio-top-subtitle.tw-text-47 {
+        font-size: 6rem !important;
+    }
+    .portfolio-top-title.tw-text-83 {
+        font-size: 11rem !important;
+    }
+}
+
+/* 3. Section headings: About Agency, What We Do, video, team */
+.section-title.tw-text-29,
+.video-title.tw-text-29,
+.testimonial-section-title.tw-text-29 {
+    font-size: 3.5rem !important;
+    line-height: 1.1 !important;
+}
+
+/* 4. Service card headings */
+.service-title.tw-text-13 {
+    font-size: 2rem !important;
+    line-height: 1.15 !important;
+}
+
+/* 5. Marquee strip large text */
+.maquee-title.tw-text-24 {
+    font-size: 4rem !important;
+}
+
+/* 6. About section tagline paragraph */
+.about-paragraph.tw-text-20 {
+    font-size: 1.75rem !important;
+    line-height: 1.45 !important;
 }
 
