@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Block assets from being indexed
+Disallow: /assets/
+
+# Host
+Host: brandingbots.in
