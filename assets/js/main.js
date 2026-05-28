@@ -64,7 +64,12 @@
             const preloaderVideo = preloader.querySelector(".preloader-video");
 
             document.documentElement.classList.add("preloader-active");
+            // iOS Safari ignores overflow:hidden on body — use position:fixed to truly lock scroll.
             document.body.style.overflow = "hidden";
+            document.body.style.position = "fixed";
+            document.body.style.top = "0";
+            document.body.style.left = "0";
+            document.body.style.right = "0";
 
             let isPreloaderHidden = false;
             let pageLoaded = document.readyState === "complete";
@@ -80,6 +85,10 @@
                     preloader.style.zIndex = "-1";
                     document.documentElement.classList.remove("preloader-active");
                     document.body.style.overflow = "";
+                    document.body.style.position = "";
+                    document.body.style.top = "";
+                    document.body.style.left = "";
+                    document.body.style.right = "";
                 }, 500);
             };
 

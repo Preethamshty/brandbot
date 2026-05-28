@@ -140,6 +140,35 @@
     }
 }
 
+/* ============================================================
+   iOS / touch device fixes
+   ============================================================ */
+
+/* Remove grey tap-flash on every touchable element on iOS */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Eliminate 300 ms tap delay on buttons and links (older iOS) */
+a,
+button,
+[role="button"],
+label {
+    touch-action: manipulation;
+}
+
+/* Prevent iOS Safari from zooming on input focus (requires font-size >= 16px) */
+input,
+textarea,
+select {
+    font-size: max(16px, 1em) !important;
+}
+
+/* Prevent iOS from auto-resizing text in landscape */
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
 /* Hide custom cursors on touch/mobile devices */
 @media (hover: none), (pointer: coarse) {
     .cursor,

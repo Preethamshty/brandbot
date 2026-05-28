@@ -94,19 +94,35 @@ mmm.add("(max-width: 991px)", () => {
         stagger: 0.08,
     });
 
+    // iOS Safari ignores overflow:hidden on body; position:fixed is the reliable lock.
+    const lockBodyScroll = () => {
+        document.body.style.overflow = "hidden";
+        document.body.style.position = "fixed";
+        document.body.style.top = "0";
+        document.body.style.left = "0";
+        document.body.style.right = "0";
+    };
+    const unlockBodyScroll = () => {
+        document.body.style.overflow = "";
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.left = "";
+        document.body.style.right = "";
+    };
+
     toggleMobileMenu.addEventListener("click", function () {
         mtl.play();
-        document.body.style.overflow = "hidden";
+        lockBodyScroll();
     });
 
     closeButton.addEventListener("click", function () {
         mtl.reverse();
-        document.body.style.overflow = "";
+        unlockBodyScroll();
     });
 
     mobileSideOverlay.addEventListener("click", function () {
         mtl.reverse();
-        document.body.style.overflow = "";
+        unlockBodyScroll();
     });
 });
 
