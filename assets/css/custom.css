@@ -308,11 +308,15 @@ html {
 }
 
 /* Ensure GSAP-pinned portfolio cards always paint above the section heading.
-   The heading uses z-1 (z-index:1); panels need a higher value so they
-   aren't buried under the title when position:fixed is applied during pin. */
+   heading wrapper uses z-1 (z-index:1); lowering it to 0 and raising panels
+   to 10 prevents the title from bleeding over pinned cards on any device. */
+.portfolio-area .position-relative.z-1.tw-mb-2 {
+    z-index: 0 !important;
+}
+
 .portfolio-area .portfolio-panel {
     position: relative;
-    z-index: 2;
+    z-index: 10 !important;
 }
 
 /* Desktop portfolio text style for first 4 cards */
