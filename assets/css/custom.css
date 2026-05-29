@@ -221,7 +221,7 @@ html {
 @media (min-width: 768px) {
     .banner-content {
         inset-block-end: auto !important;
-        inset-block-start: 18% !important;
+        inset-block-start: 10% !important;
     }
 
     .banner-title {
