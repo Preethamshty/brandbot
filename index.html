@@ -35,7 +35,7 @@
     <link rel="stylesheet" href="assets/css/aos.css">
     <!-- Main css -->
     <link rel="stylesheet" href="assets/css/main.css?v=20260415-5">
-    <link rel="stylesheet" href="assets/css/custom.css?v=20260530-1">
+    <link rel="stylesheet" href="assets/css/custom.css?v=20260530-2">
 </head>
 
 <body class="home-one-bg tw-magic-cursor">
@@ -1627,6 +1627,12 @@ Helping brands grow online through complete marketplace management and e-commerc
 <script src="assets/js/slider-active.js"></script>
 <!-- main js -->
 <script src="assets/js/main.js?v=20260529-1"></script>
+<!-- Disable custom cursor on touch/mobile before cursor JS loads -->
+<script>
+if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+    document.body.classList.add('is-mobile');
+}
+</script>
 <!-- tw-cursor js -->
 <script src="assets/js/tw-cursor.js"></script>
 <script>

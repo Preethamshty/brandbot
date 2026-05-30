@@ -386,6 +386,17 @@ html {
 
 /* Mobile only: tighten gap between portfolio and testimonial */
 @media (max-width: 767px) {
+    /* Hide decorative arrow shape in portfolio heading — overlaps text on mobile */
+    .portfolio-area .portfolio-shape {
+        display: none !important;
+    }
+
+    /* Hide hero circle and arrow shape on mobile — prevent overflow into lower sections */
+    .banner-circle,
+    .banner-arrow-shape {
+        display: none !important;
+    }
+
     .portfolio-area {
         padding-block-end: 20px !important;
     }
