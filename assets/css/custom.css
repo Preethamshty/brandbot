@@ -497,10 +497,6 @@ html {
     .bb-pf-mobile  { display: block !important; }
 }
 
-/* Poppins on portfolio heading (desktop) */
-.bb-pf-desktop .portfolio-top-subtitle,
-.bb-pf-desktop .portfolio-top-title {
-    font-family: 'Poppins', sans-serif !important;
-}
+/* Poppins on portfolio heading (mobile only) */
 
 
