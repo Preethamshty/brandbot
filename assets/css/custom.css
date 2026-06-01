@@ -503,15 +503,4 @@ html {
     font-family: 'Poppins', sans-serif !important;
 }
 
-/* Desktop portfolio heading size override (template defaults are 188px / 332px) */
-@media (min-width: 768px) {
-    .bb-pf-desktop .portfolio-top-subtitle {
-        font-size: clamp(36px, 4vw, 56px) !important;
-    }
-
-    .bb-pf-desktop .portfolio-top-title {
-        font-size: clamp(60px, 7vw, 96px) !important;
-        margin-block-start: -20px !important;
-    }
-}
 
