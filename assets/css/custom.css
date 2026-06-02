@@ -492,15 +492,6 @@ html {
     }
 }
 
-/* Athletic font */
-@font-face {
-    font-family: "Athletic";
-    src: url("../fonts/Athletic.TTF") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
 /* Mandarin - Athletic Pro Variable font */
 @font-face {
     font-family: "AthleticPro";
