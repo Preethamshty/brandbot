@@ -485,6 +485,23 @@ html {
     }
 }
 
+/* Testimonial mobile fixes */
+@media (max-width: 767px) {
+    /* Hide animated arrow shape on mobile */
+    .testimonial-arrow-shape {
+        display: none !important;
+    }
+
+    /* Fix "Our Testimonials" pill — prevent overflow/break */
+    .testimonial-pill {
+        white-space: nowrap !important;
+        display: inline-flex !important;
+        max-width: 100% !important;
+        font-size: 14px !important;
+        padding: 8px 16px !important;
+    }
+}
+
 /* ============================================================
    Global mobile safeguards — prevent horizontal scroll on any device
    ============================================================ */
