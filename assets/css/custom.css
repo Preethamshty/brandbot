@@ -413,9 +413,13 @@ html {
         padding-top: 20px !important;
     }
 
-    .testimonial-area .row.justify-content-between > div:first-child {
-        margin-top: -10px;
-        margin-bottom: 6px;
+    .testimonial-top-block {
+        flex-direction: column !important;
+    }
+
+    .testimonial-top-block > div:first-child {
+        margin-top: 0 !important;
+        margin-bottom: 20px !important;
     }
 }
 
