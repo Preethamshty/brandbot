@@ -15892,10 +15892,6 @@ li:hover > .mega-menu {
         height: auto !important;
     }
 
-    .swiper-slide {
-        overflow: visible !important;
-    }
-
     /* decorative arrow image */
     .testimonial-arrow-shape {
         width: 120px !important;

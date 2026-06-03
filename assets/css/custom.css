@@ -490,13 +490,18 @@ html {
     }
 }
 
-/* Prevent Swiper loop-clone bleed on all viewports */
+/* Prevent Swiper loop-clone bleed on all viewports.
+   clip-path: inset(0) enforces pixel-perfect clipping even when
+   the swiper-wrapper's will-change:transform creates a compositing
+   layer that escapes normal overflow:hidden clipping. */
 .testimonial-active {
     overflow: hidden !important;
+    clip-path: inset(0);
 }
 
 .testimonial-slide {
     overflow: hidden !important;
+    clip-path: inset(0);
 }
 
 /* Testimonial mobile fixes */
