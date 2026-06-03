@@ -490,7 +490,8 @@ html {
     }
 }
 
-/* Clip swiper slides at the container boundary. */
+/* Fade-effect Swiper: non-active slides sit stacked at z-index 0,
+   active slide at z-index 1. Overflow guard kept for safety. */
 .testimonial-active {
     overflow: hidden !important;
 }
