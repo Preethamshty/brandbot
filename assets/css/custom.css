@@ -490,18 +490,31 @@ html {
     }
 }
 
-/* Prevent Swiper loop-clone bleed on all viewports.
-   clip-path: inset(0) enforces pixel-perfect clipping even when
-   the swiper-wrapper's will-change:transform creates a compositing
-   layer that escapes normal overflow:hidden clipping. */
+/* Clip swiper slides at the container boundary. */
 .testimonial-active {
     overflow: hidden !important;
-    clip-path: inset(0);
 }
 
 .testimonial-slide {
     overflow: hidden !important;
-    clip-path: inset(0);
+}
+
+/* ============================================================
+   Testimonial nav — lives OUTSIDE .testimonial-active so Swiper
+   loop clones never contain these buttons, eliminating the
+   character-column bleed seen when non-slide-1 slides are active.
+   ============================================================ */
+.bb-testimonial-nav {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 16px;
+}
+
+@media (max-width: 767px) {
+    .bb-testimonial-nav {
+        padding-top: 12px;
+        padding-right: 2px;
+    }
 }
 
 /* Testimonial mobile fixes */
