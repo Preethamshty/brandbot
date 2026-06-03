@@ -578,4 +578,21 @@ html {
     [class*="subtitle"], [class*="text"] {
         font-family: "AthleticPro", sans-serif !important;
     }
+
+    /* Keep all content text left-aligned as shown on mobile */
+    h1, h2, h3, h4, h5, h6,
+    p, li, span, a {
+        text-align: left !important;
+    }
+
+    /* Exceptions — elements that must stay centred */
+    .testimonial-pill,
+    .banner-review-content,
+    .theme-btn,
+    .theme-btn-main,
+    button,
+    .bb-testimonial-nav,
+    [class*="text-center"] {
+        text-align: center !important;
+    }
 }
