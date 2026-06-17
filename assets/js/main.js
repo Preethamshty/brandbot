@@ -25,17 +25,24 @@
 
         ////////////////////////////////////////////////////
         // 01. PreLoader Js
+        const isIOSDevice =
+            /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+            (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
         const ensureVideoPreloader = () => {
             const preloader = document.querySelector(".preloader");
             if (!preloader) return null;
 
             const hasVideo = !!preloader.querySelector(".preloader-video");
-            if (!hasVideo) {
+            if (!hasVideo && !isIOSDevice) {
                 preloader.innerHTML = `
                     <video class="preloader-video" autoplay muted playsinline preload="auto">
                         <source src="assets/videos/Loading_Page.mp4" type="video/mp4">
                     </video>
                 `;
+            }
+            if (isIOSDevice) {
+                preloader.style.background = "#000";
             }
 
             preloader.style.background = "#000";
@@ -461,6 +468,7 @@
         // ========================= AOS Js Start ===========================
         AOS.init({
             once: true,
+            disable: isIOSDevice,
         });
         // ========================= AOS Js End ===========================
 
@@ -491,13 +499,41 @@
     ////////////////////////////////////////////////////
 	// 05. about scroll rotate Js
     let reloadClassName = document.getElementById("reload");
-    if (reloadClassName !== null) {
-        window.onscroll = function () {
-            scrollRotate();
-        };
-        function scrollRotate() {
-            reloadClassName.style.transform = "rotate(" + window.pageYOffset / 6 + "deg)";
+    const headerElement = document.querySelector(".header");
+
+    if (isIOSDevice) {
+        document.querySelectorAll(".mouseCursor").forEach((cursorEl) => {
+            cursorEl.style.display = "none";
+        });
+    }
+
+    if (reloadClassName !== null || headerElement !== null) {
+        let scrollTicking = false;
+
+        function updateScrollEffects() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (reloadClassName !== null) {
+                reloadClassName.style.transform = `rotate(${scrollTop / 6}deg)`;
+            }
+
+            if (headerElement !== null) {
+                headerElement.classList.toggle("fixed-header", scrollTop >= 260);
+            }
+
+            scrollTicking = false;
         }
+
+        window.addEventListener(
+            "scroll",
+            function () {
+                if (!scrollTicking) {
+                    scrollTicking = true;
+                    window.requestAnimationFrame(updateScrollEffects);
+                }
+            },
+            { passive: true }
+        );
     }
 
 
@@ -538,13 +574,42 @@
 
     ////////////////////////////////////////////////////
 	// 08. Sticky Js
-    $(window).on("scroll", function () {
-        if ($(window).scrollTop() >= 260) {
-            $(".header").addClass("fixed-header");
-        } else {
-            $(".header").removeClass("fixed-header");
+    if (!isIOSDevice) {
+        $(window).on("scroll", function () {
+            if ($(window).scrollTop() >= 260) {
+                $(".header").addClass("fixed-header");
+            } else {
+                $(".header").removeClass("fixed-header");
+            }
+        });
+    }
+
+
+    ////////////////////////////////////////////////////
+	// 08. Sticky Js for iOS
+    if (isIOSDevice) {
+        const iosHeader = document.querySelector('.header');
+        let iosScrollTicking = false;
+
+        function updateIosStickyHeader() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (iosHeader) {
+                iosHeader.classList.toggle('fixed-header', scrollTop >= 260);
+            }
+            iosScrollTicking = false;
         }
-    });
+
+        window.addEventListener(
+            'scroll',
+            function () {
+                if (!iosScrollTicking) {
+                    iosScrollTicking = true;
+                    window.requestAnimationFrame(updateIosStickyHeader);
+                }
+            },
+            { passive: true }
+        );
+    }
 
 
     ////////////////////////////////////////////////////
@@ -708,12 +773,17 @@
             }
         }
     }
-    itCursor();
-    $(".tw-cursor-point-area").on("mouseenter", function () {
-        $(".mouseCursor").addClass("cursor-big");
-    });
-    $(".tw-cursor-point-area").on("mouseleave", function () {
-        $(".mouseCursor").removeClass("cursor-big");
-    });
+
+    if (!isIOSDevice) {
+        itCursor();
+        $(".tw-cursor-point-area").on("mouseenter", function () {
+            $(".mouseCursor").addClass("cursor-big");
+        });
+        $(".tw-cursor-point-area").on("mouseleave", function () {
+            $(".mouseCursor").removeClass("cursor-big");
+        });
+    } else {
+        $(".mouseCursor").css("display", "none");
+    }
 
 })(jQuery);
