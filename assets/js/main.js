@@ -98,33 +98,76 @@
 
             // iOS Safari shows a native play-button overlay on video elements even when
             // muted + playsinline + autoplay are set. pointer-events:none cannot suppress
-            // it. Fix: on iOS, hide the video entirely and fade out on page load / hard cap.
+            // it. Fix: on iOS, attempt to draw the video to a canvas to avoid native overlay.
+            // If that fails, fall back to the existing spinning logo image.
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
                 (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
             if (isIOS && preloaderVideo) {
-                // iOS: hide native video overlay and show a lightweight logo animation as fallback
                 preloaderVideo.style.display = "none";
                 preloaderVideo.pause();
 
-                // Insert a lightweight rotating logo fallback if not already present
-                let fallback = preloader.querySelector('.preloader-fallback');
-                if (!fallback) {
-                    fallback = document.createElement('div');
-                    fallback.className = 'preloader-fallback';
-                    fallback.innerHTML = `
-                        <img src="assets/images/logo/logo.png" alt="logo" />
-                    `;
-                    preloader.appendChild(fallback);
+                const canvasClass = 'preloader-fallback-canvas';
+                let canvas = preloader.querySelector('.' + canvasClass);
+                if (!canvas) {
+                    canvas = document.createElement('canvas');
+                    canvas.className = canvasClass;
+                    canvas.style.width = '100%';
+                    canvas.style.height = '100%';
+                    canvas.style.display = 'block';
+                    preloader.appendChild(canvas);
                 }
 
-                videoCompleted = true;
-                if (!pageLoaded) {
-                    window.addEventListener("load", () => {
-                        pageLoaded = true;
-                        hidePreloader();
-                    }, { once: true });
+                const ctx = canvas.getContext && canvas.getContext('2d');
+                let rafId = null;
+
+                function drawFrame() {
+                    try {
+                        if (preloaderVideo.readyState >= 2 && ctx) {
+                            const rect = canvas.getBoundingClientRect();
+                            const dpr = window.devicePixelRatio || 1;
+                            canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+                            canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+                            ctx.drawImage(preloaderVideo, 0, 0, canvas.width, canvas.height);
+                        }
+                    } catch (e) {
+                        // drawing can fail if video isn't allowed; ignore and let fallback show
+                    }
+                    rafId = requestAnimationFrame(drawFrame);
                 }
-                setTimeout(() => { pageLoaded = true; videoCompleted = true; hidePreloader(); }, 3000);
+
+                preloaderVideo.muted = true;
+                preloaderVideo.loop = true;
+                preloaderVideo.setAttribute('playsinline', '');
+                preloaderVideo.setAttribute('webkit-playsinline', '');
+
+                const playPromise = preloaderVideo.play();
+                if (playPromise && typeof playPromise.then === 'function') {
+                    playPromise.then(() => {
+                        if (ctx) drawFrame();
+                    }).catch(() => {
+                        // autoplay blocked — remove canvas and show static spinner fallback
+                        try { canvas.parentNode.removeChild(canvas); } catch (e) {}
+                        let fallback = preloader.querySelector('.preloader-fallback');
+                        if (!fallback) {
+                            fallback = document.createElement('div');
+                            fallback.className = 'preloader-fallback';
+                            fallback.innerHTML = '<img src="assets/images/logo/logo.png" alt="logo" />';
+                            preloader.appendChild(fallback);
+                        }
+                    });
+                } else {
+                    if (ctx) drawFrame();
+                }
+
+                const originalHide = hidePreloader;
+                hidePreloader = function () {
+                    if (rafId) cancelAnimationFrame(rafId);
+                    try { if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas); } catch (e) {}
+                    originalHide();
+                };
+
+                // safety timeout
+                setTimeout(() => { pageLoaded = true; videoCompleted = true; hidePreloader(); }, 4000);
                 tryHidePreloader();
                 return;
             }
