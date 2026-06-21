@@ -77,7 +77,7 @@
             let pageLoaded = document.readyState === "complete";
             let videoCompleted = !preloaderVideo;
 
-            const hidePreloader = () => {
+            let hidePreloader = () => {
                 if (isPreloaderHidden) return;
                 isPreloaderHidden = true;
                 preloader.style.opacity = "0";
