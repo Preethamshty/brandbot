@@ -112,7 +112,8 @@
                     canvas = document.createElement('canvas');
                     canvas.className = canvasClass;
                     // match video sizing rules: constrain width, let height scale to preserve aspect
-                    canvas.style.width = 'min(100vw, 1000px)';
+                    // make the canvas match the intended visible logo size
+                    canvas.style.width = 'min(80vw, 420px)';
                     canvas.style.height = 'auto';
                     canvas.style.maxHeight = '100vh';
                     canvas.style.display = 'block';

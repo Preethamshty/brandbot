@@ -229,21 +229,16 @@ html {
 .preloader .preloader-fallback-canvas {
     display: block;
     margin: 0 auto;
-    width: min(100vw, 1000px);
+    width: min(80vw, 420px);
     max-height: 100vh;
 }
 
 .preloader .preloader-fallback img {
     display: block;
-    width: 100%;
-    height: auto;
+    width: min(80vw, 420px) !important;
+    max-width: 80vw !important;
+    height: auto !important;
     object-fit: contain;
-}
-
-/* Ensure fallback image isn't forced to a tiny fixed width by other styles */
-.preloader .preloader-fallback img {
-    max-width: 60vw !important;
-    width: auto !important;
 }
 
 /* About section — mobile: hide image, arrow, tagline text and ball */
