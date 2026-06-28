@@ -13504,11 +13504,12 @@ body.tw-magic-cursor #magic-cursor {
 /* iPhone-specific phone number fix */
 @supports (-webkit-touch-callout: none) {
     .contact-left-item .phone-number {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+        font-family: var(--heading-font) !important;
         -webkit-font-smoothing: antialiased !important;
         text-rendering: optimizeLegibility !important;
+        font-feature-settings: "tnum" 1, "lnum" 1 !important;
         font-variant-numeric: tabular-nums !important;
-        letter-spacing: 0.01em !important;
+        letter-spacing: normal !important;
     }
 
     @media only screen and (max-width: 575px) {
