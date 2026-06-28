@@ -96,122 +96,25 @@
                 }
             };
 
-            // iOS Safari shows a native play-button overlay on video elements even when
-            // muted + playsinline + autoplay are set. pointer-events:none cannot suppress
-            // it. Fix: on iOS, attempt to draw the video to a canvas to avoid native overlay.
-            // If that fails, fall back to the existing spinning logo image.
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-                (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-            if (isIOS && preloaderVideo) {
-                preloaderVideo.style.opacity = '0';
-                preloaderVideo.style.position = 'absolute';
-                preloaderVideo.style.top = '0';
-                preloaderVideo.style.left = '0';
-                preloaderVideo.style.width = '1px';
-                preloaderVideo.style.height = '1px';
-                preloaderVideo.style.pointerEvents = 'none';
-
-                const canvasClass = 'preloader-fallback-canvas';
-                let canvas = preloader.querySelector('.' + canvasClass);
-                if (!canvas) {
-                    canvas = document.createElement('canvas');
-                    canvas.className = canvasClass;
-                    // match video sizing rules: constrain width, let height scale to preserve aspect
-                    // make the canvas match the intended visible logo size
-                    canvas.style.width = 'min(80vw, 420px)';
-                    canvas.style.height = 'auto';
-                    canvas.style.maxHeight = '100vh';
-                    canvas.style.display = 'block';
-                    preloader.appendChild(canvas);
-                }
-
-                const ctx = canvas.getContext && canvas.getContext('2d');
-                let rafId = null;
-
-                function drawFrame() {
-                    try {
-                        if (preloaderVideo.readyState >= 2 && ctx) {
-                            const rect = canvas.getBoundingClientRect();
-                            const dpr = window.devicePixelRatio || 1;
-                            canvas.width = Math.max(1, Math.floor(rect.width * dpr));
-                            canvas.height = Math.max(1, Math.floor(rect.height * dpr));
-                            ctx.drawImage(preloaderVideo, 0, 0, canvas.width, canvas.height);
-                        }
-                    } catch (e) {
-                        // drawing can fail if video isn't allowed; ignore and let fallback show
-                    }
-                    rafId = requestAnimationFrame(drawFrame);
-                }
-
-                preloaderVideo.muted = true;
-                preloaderVideo.loop = true;
+            if (isIOSDevice && preloaderVideo) {
                 preloaderVideo.setAttribute('playsinline', '');
                 preloaderVideo.setAttribute('webkit-playsinline', '');
                 preloaderVideo.setAttribute('muted', '');
-
-                let hasStartedFallback = false;
-                const showFallback = () => {
-                    if (hasStartedFallback) return;
-                    hasStartedFallback = true;
-                    try { canvas.parentNode.removeChild(canvas); } catch (e) {}
-                    let fallback = preloader.querySelector('.preloader-fallback');
-                    if (!fallback) {
-                        fallback = document.createElement('div');
-                        fallback.className = 'preloader-fallback';
-                        fallback.innerHTML = '<img src="assets/images/logo/logo.png" alt="logo" />';
-                        preloader.appendChild(fallback);
-                    }
-                };
-
-                const startCanvasDraw = () => {
-                    if (hasStartedFallback || !ctx) return;
-                    if (preloaderVideo.readyState < 2 || preloaderVideo.paused) return;
-                    drawFrame();
-                };
+                preloaderVideo.muted = true;
+                preloaderVideo.loop = true;
+                preloaderVideo.style.opacity = '1';
+                preloaderVideo.style.position = 'absolute';
+                preloaderVideo.style.top = '0';
+                preloaderVideo.style.left = '0';
+                preloaderVideo.style.width = '100%';
+                preloaderVideo.style.height = '100%';
+                preloaderVideo.style.objectFit = 'cover';
+                preloaderVideo.style.pointerEvents = 'none';
 
                 preloaderVideo.addEventListener('playing', () => {
-                    startCanvasDraw();
+                    videoCompleted = true;
+                    tryHidePreloader();
                 }, { once: true });
-
-                preloaderVideo.addEventListener('canplay', () => {
-                    startCanvasDraw();
-                }, { once: true });
-
-                const playPromise = preloaderVideo.play();
-                if (playPromise && typeof playPromise.then === 'function') {
-                    playPromise.then(() => {
-                        setTimeout(() => {
-                            if (!hasStartedFallback && (preloaderVideo.paused || preloaderVideo.readyState < 2)) {
-                                showFallback();
-                            } else {
-                                startCanvasDraw();
-                            }
-                        }, 1500);
-                    }).catch(() => {
-                        // autoplay blocked — remove canvas and show static spinner fallback
-                        showFallback();
-                    });
-                } else {
-                    setTimeout(() => {
-                        if (!hasStartedFallback && (preloaderVideo.paused || preloaderVideo.readyState < 2)) {
-                            showFallback();
-                        } else {
-                            startCanvasDraw();
-                        }
-                    }, 1500);
-                }
-
-                const originalHide = hidePreloader;
-                hidePreloader = function () {
-                    if (rafId) cancelAnimationFrame(rafId);
-                    try { if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas); } catch (e) {}
-                    originalHide();
-                };
-
-                // safety timeout
-                setTimeout(() => { pageLoaded = true; videoCompleted = true; hidePreloader(); }, 4000);
-                tryHidePreloader();
-                return;
             }
 
             if (!pageLoaded) {
@@ -223,13 +126,17 @@
 
             if (preloaderVideo) {
                 preloaderVideo.muted = true;
-                preloaderVideo.loop = false;
+                if (!isIOSDevice) {
+                    preloaderVideo.loop = false;
+                }
                 preloaderVideo.currentTime = 0;
 
-                preloaderVideo.addEventListener("ended", () => {
-                    videoCompleted = true;
-                    tryHidePreloader();
-                }, { once: true });
+                if (!isIOSDevice) {
+                    preloaderVideo.addEventListener("ended", () => {
+                        videoCompleted = true;
+                        tryHidePreloader();
+                    }, { once: true });
+                }
 
                 // Hide immediately if video fails to load (network error, missing file, codec).
                 preloaderVideo.addEventListener("error", () => {
