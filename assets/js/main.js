@@ -72,6 +72,44 @@
                 preloader.appendChild(fallback);
             }
 
+            // Create a stronger image-based preloader (used on iOS/when video fails)
+            let imgPre = preloader.querySelector('.preloader-image');
+            if (!imgPre) {
+                imgPre = document.createElement('div');
+                imgPre.className = 'preloader-image';
+                imgPre.style.display = 'none';
+                imgPre.style.pointerEvents = 'none';
+                // We'll try multiple candidate logo files (handles case-sensitive deploys)
+                imgPre.innerHTML = '<img src="assets/images/logo/logo.png" alt="logo" />';
+                preloader.appendChild(imgPre);
+            }
+            // set up image retry logic to handle missing files on production (case-sensitivity)
+            try {
+                const imgEl = imgPre.querySelector('img');
+                const candidates = [
+                    'assets/images/logo/logo.png',
+                    'assets/images/logo/logo-two.png',
+                    'assets/images/logo/logo-four.png',
+                    'assets/images/logo/footer-logo.png'
+                ];
+                imgEl.dataset.candidateIndex = imgEl.dataset.candidateIndex || 0;
+                imgEl.onerror = function () {
+                    try {
+                        const idx = Number(imgEl.dataset.candidateIndex) + 1;
+                        if (idx < candidates.length) {
+                            imgEl.dataset.candidateIndex = idx;
+                            imgEl.src = candidates[idx];
+                            reportPreloaderIssue('logo not found, trying ' + candidates[idx]);
+                        } else {
+                            reportPreloaderIssue('all logo candidates failed to load');
+                        }
+                    } catch (e) { console.warn(e); }
+                };
+                imgEl.onload = function () {
+                    reportPreloaderIssue('logo loaded: ' + (imgEl.src || '').split('/').pop());
+                };
+            } catch (e) { /* ignore */ }
+
             return preloader;
         };
 
@@ -79,6 +117,35 @@
             const preloader = ensureVideoPreloader();
             if (!preloader) return;
             const preloaderVideo = preloader.querySelector(".preloader-video");
+
+            // Debug helper: show a brief overlay and console message when preloader issues occur
+            const reportPreloaderIssue = (message) => {
+                try {
+                    console.warn('Preloader:', message);
+                    let dbg = document.querySelector('.preloader-debug');
+                    if (!dbg) {
+                        dbg = document.createElement('div');
+                        dbg.className = 'preloader-debug';
+                        dbg.style.position = 'fixed';
+                        dbg.style.left = '12px';
+                        dbg.style.bottom = '12px';
+                        dbg.style.zIndex = '99999';
+                        dbg.style.padding = '8px 12px';
+                        dbg.style.background = 'rgba(0,0,0,0.7)';
+                        dbg.style.color = '#fff';
+                        dbg.style.fontSize = '12px';
+                        dbg.style.borderRadius = '6px';
+                        dbg.style.maxWidth = '60vw';
+                        dbg.style.boxShadow = '0 2px 8px rgba(0,0,0,0.5)';
+                        dbg.style.opacity = '0';
+                        dbg.style.transition = 'opacity 0.35s ease';
+                        document.body.appendChild(dbg);
+                    }
+                    dbg.textContent = message;
+                    dbg.style.opacity = '1';
+                    setTimeout(() => { try { dbg.style.opacity = '0'; } catch (e) {} }, 5000);
+                } catch (e) { /* ignore */ }
+            };
 
             document.documentElement.classList.add("preloader-active");
             document.body.style.overflow = "hidden";
@@ -152,6 +219,8 @@
 
                 // image fallback element (already created by ensureVideoPreloader)
                 const fallback = preloader.querySelector('.preloader-fallback');
+                // stable image preloader element for iOS/production
+                const imgPreEl = preloader.querySelector('.preloader-image');
 
                 // Try to play and draw a frame — if drawing succeeds we show canvas, otherwise show image fallback
                 const tryDrawOnce = () => {
@@ -191,17 +260,31 @@
                 // Give video a bit more time to present animation before falling back
                 const scheduleTry = () => {
                     setTimeout(() => {
-                        if (!tryDrawOnce()) {
-                            // Do not reveal the fallback branding image — simply continue
-                            videoCompleted = true;
-                            tryHidePreloader();
-                        }
+                                if (!tryDrawOnce()) {
+                                    // If drawing failed, show stable image preloader instead of the video/fallback
+                                    if (imgPreEl) {
+                                        imgPreEl.style.display = 'flex';
+                                        imgPreEl.style.opacity = '0';
+                                        imgPreEl.style.transition = 'opacity 0.6s ease, transform 0.7s ease';
+                                        setTimeout(() => { try { imgPreEl.style.opacity = '1'; imgPreEl.style.transform = 'scale(1)'; } catch(e){} }, 20);
+                                    }
+                                    reportPreloaderIssue('canvas draw failed; showing image preloader');
+                                    videoCompleted = true;
+                                    tryHidePreloader();
+                                }
                     }, 1000);
                 };
 
                 if (playPromise && typeof playPromise.then === 'function') {
-                    playPromise.then(() => scheduleTry()).catch(() => {
-                        // Autoplay blocked or play() failed — do not show fallback branding image.
+                    playPromise.then(() => scheduleTry()).catch((err) => {
+                        // Autoplay blocked or play() failed — show stable image preloader instead
+                        reportPreloaderIssue('video.play() rejected: ' + (err && err.message ? err.message : String(err)));
+                        if (imgPreEl) {
+                            imgPreEl.style.display = 'flex';
+                            imgPreEl.style.opacity = '0';
+                            imgPreEl.style.transition = 'opacity 0.6s ease, transform 0.7s ease';
+                            setTimeout(() => { try { imgPreEl.style.opacity = '1'; imgPreEl.style.transform = 'scale(1)'; } catch(e){} }, 20);
+                        }
                         videoCompleted = true;
                         tryHidePreloader();
                     });
@@ -233,6 +316,7 @@
 
                 // Hide immediately if video fails to load (network error, missing file, codec).
                 preloaderVideo.addEventListener("error", () => {
+                    reportPreloaderIssue('video element error event (network/codec)');
                     videoCompleted = true;
                     tryHidePreloader();
                 }, { once: true });
