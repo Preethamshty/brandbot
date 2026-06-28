@@ -103,8 +103,13 @@
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
                 (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
             if (isIOS && preloaderVideo) {
-                preloaderVideo.style.display = "none";
-                preloaderVideo.pause();
+                preloaderVideo.style.opacity = '0';
+                preloaderVideo.style.position = 'absolute';
+                preloaderVideo.style.top = '0';
+                preloaderVideo.style.left = '0';
+                preloaderVideo.style.width = '1px';
+                preloaderVideo.style.height = '1px';
+                preloaderVideo.style.pointerEvents = 'none';
 
                 const canvasClass = 'preloader-fallback-canvas';
                 let canvas = preloader.querySelector('.' + canvasClass);
@@ -142,24 +147,58 @@
                 preloaderVideo.loop = true;
                 preloaderVideo.setAttribute('playsinline', '');
                 preloaderVideo.setAttribute('webkit-playsinline', '');
+                preloaderVideo.setAttribute('muted', '');
+
+                let hasStartedFallback = false;
+                const showFallback = () => {
+                    if (hasStartedFallback) return;
+                    hasStartedFallback = true;
+                    try { canvas.parentNode.removeChild(canvas); } catch (e) {}
+                    let fallback = preloader.querySelector('.preloader-fallback');
+                    if (!fallback) {
+                        fallback = document.createElement('div');
+                        fallback.className = 'preloader-fallback';
+                        fallback.innerHTML = '<img src="assets/images/logo/logo.png" alt="logo" />';
+                        preloader.appendChild(fallback);
+                    }
+                };
+
+                const startCanvasDraw = () => {
+                    if (hasStartedFallback || !ctx) return;
+                    if (preloaderVideo.readyState < 2 || preloaderVideo.paused) return;
+                    drawFrame();
+                };
+
+                preloaderVideo.addEventListener('playing', () => {
+                    startCanvasDraw();
+                }, { once: true });
+
+                preloaderVideo.addEventListener('canplay', () => {
+                    startCanvasDraw();
+                }, { once: true });
 
                 const playPromise = preloaderVideo.play();
                 if (playPromise && typeof playPromise.then === 'function') {
                     playPromise.then(() => {
-                        if (ctx) drawFrame();
+                        setTimeout(() => {
+                            if (!hasStartedFallback && (preloaderVideo.paused || preloaderVideo.readyState < 2)) {
+                                showFallback();
+                            } else {
+                                startCanvasDraw();
+                            }
+                        }, 1500);
                     }).catch(() => {
                         // autoplay blocked — remove canvas and show static spinner fallback
-                        try { canvas.parentNode.removeChild(canvas); } catch (e) {}
-                        let fallback = preloader.querySelector('.preloader-fallback');
-                        if (!fallback) {
-                            fallback = document.createElement('div');
-                            fallback.className = 'preloader-fallback';
-                            fallback.innerHTML = '<img src="assets/images/logo/logo.png" alt="logo" />';
-                            preloader.appendChild(fallback);
-                        }
+                        showFallback();
                     });
                 } else {
-                    if (ctx) drawFrame();
+                    setTimeout(() => {
+                        if (!hasStartedFallback && (preloaderVideo.paused || preloaderVideo.readyState < 2)) {
+                            showFallback();
+                        } else {
+                            startCanvasDraw();
+                        }
+                    }, 1500);
                 }
 
                 const originalHide = hidePreloader;
