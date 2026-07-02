@@ -656,7 +656,7 @@ html {
    Desktop is untouched. Icon elements (i) are excluded so
    Phosphor / other icon fonts are not broken.
    ============================================================ */
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
     body,
     h1, h2, h3, h4, h5, h6,
     p, a, span, li,
