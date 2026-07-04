@@ -104,11 +104,36 @@
 /* Font Family*/
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
-@import url("https://fonts.cdnfonts.com/css/satoshi");
+@font-face {
+    font-family: "Satoshi";
+    src: url("../fonts/Satoshi-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Satoshi";
+    src: url("../fonts/Satoshi-Medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Satoshi";
+    src: url("../fonts/Satoshi-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
 
 @font-face {
     font-family: "Mango Grotesque";
-  src: url("../fonts/mango-grotesque.ttf") format("opentype");
+    src: url("../fonts/mango-grotesque.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
 }
 /* ========================= Variable Css Start ======================== */
 :root {
@@ -9309,6 +9334,39 @@ input:focus, input:focus-visible {
     display: block;
 }
 
+.preloader-fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.preloader .preloader-fallback-canvas {
+    width: min(80vw, 420px);
+    height: auto;
+    max-height: 100vh;
+    display: block;
+}
+
+.preloader-fallback img {
+    width: 140px;
+    max-width: 45vw;
+    height: auto;
+    display: block;
+    animation: preloader-fallback-spin 1.2s linear infinite;
+}
+
+@keyframes preloader-fallback-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 /* Safety net: never show legacy preloader elements */
 .preloader svg,
 .preloader .preloader-heading,
@@ -13450,6 +13508,49 @@ body.tw-magic-cursor #magic-cursor {
 @media screen and (max-width: 575px) {
     .contact-five-shape-2 {
         display: none;
+    }
+}
+
+.contact-left-item .font-heading {
+    letter-spacing: normal !important;
+}
+
+.contact-left-item .phone-number {
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+    display: block !important;
+}
+
+@media screen and (max-width: 575px) {
+    .contact-left-item .font-heading {
+        font-size: 1.9rem !important;
+    }
+
+    .contact-left-item .phone-number {
+        font-size: 1.9rem !important;
+        white-space: normal !important;
+    }
+}
+
+/* iPhone-specific phone number fix */
+@supports (-webkit-touch-callout: none) {
+    .contact-left-item .phone-number {
+        font-family: var(--heading-font) !important;
+        -webkit-font-smoothing: antialiased !important;
+        text-rendering: optimizeLegibility !important;
+        font-feature-settings: "tnum" 1, "lnum" 1 !important;
+        font-variant-numeric: tabular-nums !important;
+        letter-spacing: normal !important;
+    }
+
+    @media only screen and (max-width: 575px) {
+        .contact-left-item .phone-number {
+            white-space: nowrap !important;
+            overflow-wrap: normal !important;
+            word-break: keep-all !important;
+            font-size: 1.7rem !important;
+        }
     }
 }
 
