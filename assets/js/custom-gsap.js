@@ -225,7 +225,7 @@ function initPortfolioPanels(startPoint, endPoint, scrubAmount) {
     // On iOS devices, avoid the pinned/scrubbed panel scaling animations to prevent jank.
     if (isIOSDevice) {
         gsap.set(otherSections, { scale: 1 });
-        return;
+        
     }
     gsap.set(otherSections, { scale: 1 });
     otherSections.forEach((section) => {
